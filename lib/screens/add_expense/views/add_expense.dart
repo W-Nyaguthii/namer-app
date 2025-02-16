@@ -25,7 +25,8 @@ class _AddExpenseState extends State<AddExpense> {
     'travel'
   ];
 
-  String iconSelected = '';
+  //String iconSelected = '';
+  //late Color categoryColor;
 
   @override
   void initState() {
@@ -97,6 +98,9 @@ class _AddExpenseState extends State<AddExpense> {
                               context: context,
                               builder: (ctx) {
                                 bool isExpanded = false;
+                                String iconSelected = '';
+                                Color categoryColor = Colors.white;
+
                                 return StatefulBuilder(
                                     builder: (context, setState) {
                                   return AlertDialog(
@@ -230,7 +234,12 @@ class _AddExpenseState extends State<AddExpense> {
                                                           pickerColor:
                                                               Colors.blue,
                                                           onColorChanged:
-                                                              (value) {},
+                                                              (value) {
+                                                            setState(() {
+                                                              categoryColor =
+                                                                  value;
+                                                            });
+                                                          },
                                                         ),
                                                         SizedBox(
                                                           width:
@@ -238,6 +247,8 @@ class _AddExpenseState extends State<AddExpense> {
                                                           height: 50,
                                                           child: TextButton(
                                                             onPressed: () {
+                                                              print(
+                                                                  categoryColor);
                                                               Navigator.pop(
                                                                   ctx2);
                                                             },
@@ -256,10 +267,9 @@ class _AddExpenseState extends State<AddExpense> {
                                                             child: const Text(
                                                               'Save',
                                                               style: TextStyle(
-                                                                fontSize: 22,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
+                                                                  fontSize: 22,
+                                                                  color: Colors
+                                                                      .white),
                                                             ),
                                                           ),
                                                         ),
@@ -273,12 +283,39 @@ class _AddExpenseState extends State<AddExpense> {
                                           readOnly: true,
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.white,
-                                            hintText: "Colour",
+                                            fillColor: categoryColor,
+                                            hintText: "Color",
                                             border: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(12),
                                                 borderSide: BorderSide.none),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 16,
+                                        ),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: kToolbarHeight,
+                                          child: TextButton(
+                                            onPressed: () {
+                                              //CREATE CATEGORY OBJECT
+                                              Navigator.pop(context);
+                                            },
+                                            style: TextButton.styleFrom(
+                                              backgroundColor: Colors.black,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'Save',
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],

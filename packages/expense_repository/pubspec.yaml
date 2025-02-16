@@ -1,0 +1,30 @@
+name: expense_repository
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.2
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cloud_firestore: ^5.6.3
+firebase_core: ^2.16.0    
+# cloud_firestore: ^4.9.2
+  
+ 
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+ # assets:
+  #  - assets/
