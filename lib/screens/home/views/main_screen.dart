@@ -1,10 +1,15 @@
 import 'dart:math';
+
+import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../data/data.dart'; // <-- Added import for transactionsData
+import 'package:intl/intl.dart';
+
+//import '../../../data/data.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+  final List<Expense> expenses;
+  const MainScreen(this.expenses, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +53,7 @@ class MainScreen extends StatelessWidget {
                               color: Theme.of(context).colorScheme.outline),
                         ),
                         Text(
-                          "Susan Jane",
+                          "John Doe",
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -94,7 +99,7 @@ class MainScreen extends StatelessWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.w600),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   const Text(
                     '\$ 4800.00',
                     style: TextStyle(
@@ -117,12 +122,11 @@ class MainScreen extends StatelessWidget {
                                   color: Colors.white30,
                                   shape: BoxShape.circle),
                               child: const Center(
-                                child: Icon(
-                                  CupertinoIcons.arrow_down,
-                                  size: 12,
-                                  color: Colors.greenAccent,
-                                ),
-                              ),
+                                  child: Icon(
+                                CupertinoIcons.arrow_down,
+                                size: 12,
+                                color: Colors.greenAccent,
+                              )),
                             ),
                             const SizedBox(width: 8),
                             const Column(
@@ -136,14 +140,14 @@ class MainScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  '\$ 2500.00',
+                                  '€ 2500.00',
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600),
                                 ),
                               ],
-                            ),
+                            )
                           ],
                         ),
                         Row(
@@ -155,12 +159,11 @@ class MainScreen extends StatelessWidget {
                                   color: Colors.white30,
                                   shape: BoxShape.circle),
                               child: const Center(
-                                child: Icon(
-                                  CupertinoIcons.arrow_down,
-                                  size: 12,
-                                  color: Colors.red,
-                                ),
-                              ),
+                                  child: Icon(
+                                CupertinoIcons.arrow_down,
+                                size: 12,
+                                color: Colors.red,
+                              )),
                             ),
                             const SizedBox(width: 8),
                             const Column(
@@ -174,25 +177,23 @@ class MainScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  '\$ 800.00',
+                                  '€ 800.00',
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600),
                                 ),
                               ],
-                            ),
+                            )
                           ],
-                        ),
+                        )
                       ],
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
             const SizedBox(height: 40),
-
-            // Transactions Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -212,84 +213,88 @@ class MainScreen extends StatelessWidget {
                         color: Theme.of(context).colorScheme.outline,
                         fontWeight: FontWeight.w400),
                   ),
-                ),
+                )
               ],
             ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                itemCount: transactionsData.length,
-                itemBuilder: (context, int i) {
-                  final transaction = transactionsData[i];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: transaction['color'],
-                                    shape: BoxShape.circle,
+                  itemCount: expenses.length,
+                  itemBuilder: (context, int i) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: Color(
+                                                expenses[i].category.color),
+                                            shape: BoxShape.circle),
+                                      ),
+                                      Image.asset(
+                                        'assets/${expenses[i].category.icon}.png',
+                                        scale: 2,
+                                        color: Colors.white,
+                                      )
+                                    ],
                                   ),
-                                  child: Center(
-                                    child:
-                                        transaction['icon'], // <-- Added icon
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    expenses[i].category.name,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w500),
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  transaction['name'], // <-- Updated to 'name'
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  transaction[
-                                      'totalAmount'], // <-- Updated to 'totalAmount'
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Text(
-                                  transaction['date'], // <-- Updated to 'date'
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color:
-                                          Theme.of(context).colorScheme.outline,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "\$${expenses[i].amount}.00",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Text(
+                                    DateFormat('dd/MM/yyyy')
+                                        .format(expenses[i].date),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                    );
+                  }),
+            )
           ],
         ),
       ),
