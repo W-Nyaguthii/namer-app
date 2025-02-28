@@ -53,7 +53,7 @@ class MainScreen extends StatelessWidget {
                               color: Theme.of(context).colorScheme.outline),
                         ),
                         Text(
-                          "John Doe",
+                          "Susan Jane",
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

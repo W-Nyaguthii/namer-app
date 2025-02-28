@@ -193,7 +193,7 @@ class _AddExpenseState extends State<AddExpense> {
                           filled: true,
                           fillColor: Colors.white,
                           prefixIcon: const Icon(
-                            FontAwesomeIcons.clock,
+                            FontAwesomeIcons.calendarDays,
                             size: 16,
                             color: Colors.grey,
                           ),
