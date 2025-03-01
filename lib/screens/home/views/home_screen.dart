@@ -3,30 +3,15 @@ import 'package:expense_repository/expense_repository.dart';
 import 'package:namer_app/screens/add_expense/blocs/create_categorybloc/create_category_bloc.dart';
 import 'package:namer_app/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:namer_app/screens/add_expense/views/add_expense.dart';
+import 'package:namer_app/screens/budgets/budgets.dart';
 import 'package:namer_app/screens/home/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import 'package:namer_app/screens/home/views/main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:namer_app/screens/savings/savings.dart';
 import '../../add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import '../../stats/stats.dart';
-
-// Placeholder screens for Budgets and Savings
-class BudgetScreen extends StatelessWidget {
-  const BudgetScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Budget Screen"));
-  }
-}
-
-class SavingsScreen extends StatelessWidget {
-  const SavingsScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Savings Screen"));
-  }
-} //end of placeholder screens
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -84,9 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButtonLocation: FloatingActionButtonLocation
+              .endFloat, //or centerDocked once chatbot is implemented
           floatingActionButton: FloatingActionButton(
-            //  mini: true,
+            //  mini: true, // for sizing of plus button
             onPressed: () async {
               Expense? newExpense = await Navigator.push(
                 context,
@@ -142,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
             index: index,
             children: [
               MainScreen(state.expenses), // Home
+              //section imports all the other screen views
               const StatScreen(), // Stats
               const BudgetScreen(), // Budgets
               const SavingsScreen(), // Savings

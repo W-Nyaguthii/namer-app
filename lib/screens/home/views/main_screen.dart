@@ -28,7 +28,7 @@ class MainScreen extends StatelessWidget {
                       children: [
                         Container(
                           width: 50,
-                          height: 50,
+                          height: 30,
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.yellow[700]),
@@ -46,7 +46,7 @@ class MainScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Welcome!",
+                          "Hello",
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -64,7 +64,8 @@ class MainScreen extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                    onPressed: () {}, icon: const Icon(CupertinoIcons.settings))
+                    onPressed: () {},
+                    icon: const Icon(CupertinoIcons.settings_solid))
               ],
             ),
             const SizedBox(
@@ -140,7 +141,7 @@ class MainScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  '€ 2500.00',
+                                  '\$ 2500.00',
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,
@@ -160,7 +161,7 @@ class MainScreen extends StatelessWidget {
                                   shape: BoxShape.circle),
                               child: const Center(
                                   child: Icon(
-                                CupertinoIcons.arrow_down,
+                                CupertinoIcons.arrow_up,
                                 size: 12,
                                 color: Colors.red,
                               )),
@@ -177,7 +178,7 @@ class MainScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  '€ 800.00',
+                                  '\$ 800.00',
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,

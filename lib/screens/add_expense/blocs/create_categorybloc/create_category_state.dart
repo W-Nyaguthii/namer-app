@@ -14,3 +14,5 @@ final class CreateCategoryFailure extends CreateCategoryState {}
 final class CreateCategoryLoading extends CreateCategoryState {}
 
 final class CreateCategorySuccess extends CreateCategoryState {}
+
+//class CategoryDeleted extends CreateCategoryState {}
