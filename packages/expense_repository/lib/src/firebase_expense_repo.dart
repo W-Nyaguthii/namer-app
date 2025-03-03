@@ -56,18 +56,3 @@ class FirebaseExpenseRepo implements ExpenseRepository {
     }
   }
 }
-
-//added code to handle deletion of items from firebase
-//Future<void> deleteCategory(String categoryId) async {
-  //await FirebaseFirestore.instance
-    //  .collection('categories')
-      //.doc(categoryId)
-      //.delete();
-//}
-
-//Future<void> deleteExpense(String expenseId) async {
-  //await FirebaseFirestore.instance
-    //  .collection('expenses')
-      //.doc(expenseId)
-    //  .delete();
-//}

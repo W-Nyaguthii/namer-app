@@ -17,11 +17,13 @@ class CreateCategory extends CreateCategoryEvent {
 }
 
 //to handle deleting
-//class DeleteCategory extends CreateCategoryEvent {
-  //final String categoryId;
+abstract class CategoryEvent {}
 
-  //const DeleteCategory(this.categoryId);
+class CategoryDeleteEvent extends CreateCategoryEvent {
+  final String categoryId;
 
- // @override
- // List<Object> get props => [categoryId];
-//}
+  const CategoryDeleteEvent(this.categoryId);
+
+  @override
+  List<Object> get props => [categoryId];
+}

@@ -15,4 +15,13 @@ final class CreateCategoryLoading extends CreateCategoryState {}
 
 final class CreateCategorySuccess extends CreateCategoryState {}
 
-//class CategoryDeleted extends CreateCategoryState {}
+//start here
+class CategoryDeletingState extends CreateCategoryState {}
+
+class CategoryDeletedState extends CreateCategoryState {}
+
+class CategoryDeleteErrorState extends CreateCategoryState {
+  final String error;
+
+  const CategoryDeleteErrorState(this.error);
+}

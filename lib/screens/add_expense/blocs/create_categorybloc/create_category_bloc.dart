@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:expense_repository/expense_repository.dart';
 //import 'package:flutter/foundation.dart';
@@ -18,6 +19,21 @@ class CreateCategoryBloc
         emit(CreateCategorySuccess());
       } catch (e) {
         emit(CreateCategoryFailure());
+      }
+    });
+
+//start here
+    on<CategoryDeleteEvent>((event, emit) async {
+      // Added delete event handler
+      emit(CategoryDeletingState()); // Emit deleting state
+      try {
+        await FirebaseFirestore.instance
+            .collection('categories')
+            .doc(event.categoryId)
+            .delete();
+        emit(CategoryDeletedState()); // Emit deleted state
+      } catch (e) {
+        emit(CategoryDeleteErrorState(e.toString())); // Emit error state
       }
     });
   }

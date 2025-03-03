@@ -14,3 +14,7 @@ final class CreateExpenseFailure extends CreateExpenseState {}
 final class CreateExpenseLoading extends CreateExpenseState {}
 
 final class CreateExpenseSuccess extends CreateExpenseState {}
+
+class DeleteExpenseSuccess extends CreateExpenseState {}
+
+class DeleteExpenseFailure extends CreateExpenseState {}
