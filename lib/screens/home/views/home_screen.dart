@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButtonLocation: FloatingActionButtonLocation
               .endFloat, //or centerDocked once chatbot is implemented
           floatingActionButton: FloatingActionButton(
-            //  mini: true, // for sizing of plus button
+            // mini: true, // for sizing of plus button
             onPressed: () async {
               Expense? newExpense = await Navigator.push(
                 context,

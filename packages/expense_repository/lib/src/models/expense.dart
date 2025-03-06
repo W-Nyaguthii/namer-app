@@ -5,19 +5,21 @@ class Expense {
   Category category;
   DateTime date;
   int amount;
+  String type;
 
-  Expense({
-    required this.expenseId,
-    required this.category,
-    required this.date,
-    required this.amount,
-  });
+  Expense(
+      {required this.expenseId,
+      required this.category,
+      required this.date,
+      required this.amount,
+      required this.type});
 
   static final empty = Expense(
     expenseId: '',
     category: Category.empty,
     date: DateTime.now(),
     amount: 0,
+    type: '',
   );
 
   ExpenseEntity toEntity() {
@@ -35,6 +37,7 @@ class Expense {
       category: entity.category,
       date: entity.date,
       amount: entity.amount,
+      type: '',
     );
   }
 }

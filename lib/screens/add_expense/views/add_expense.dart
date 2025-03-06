@@ -19,6 +19,7 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController expenseController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  String? selectedTransactionType = "Expense";
   // DateTime selectDate = DateTime.now();
   late Expense expense;
   bool isLoading = false;
@@ -28,6 +29,8 @@ class _AddExpenseState extends State<AddExpense> {
     dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
     expense = Expense.empty;
     expense.expenseId = const Uuid().v1();
+    expense.date = DateTime.now();
+    expense.type = "Expense"; // Set default type
     super.initState();
   }
 
@@ -59,7 +62,7 @@ class _AddExpenseState extends State<AddExpense> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
-                        "Add Expenses",
+                        "Add Transaction",
                         style: TextStyle(
                             fontSize: 22, fontWeight: FontWeight.w500),
                       ),
@@ -71,6 +74,8 @@ class _AddExpenseState extends State<AddExpense> {
                         child: TextFormField(
                           controller: expenseController,
                           textAlignVertical: TextAlignVertical.center,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
@@ -79,6 +84,7 @@ class _AddExpenseState extends State<AddExpense> {
                               size: 16,
                               color: Colors.grey,
                             ),
+                            hintText: 'Amount',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide: BorderSide.none),
@@ -86,8 +92,39 @@ class _AddExpenseState extends State<AddExpense> {
                         ),
                       ),
                       const SizedBox(
-                        height: 32,
+                        height: 20,
                       ),
+
+                      //Income/Expense section
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: DropdownButtonFormField<String>(
+                          value: selectedTransactionType,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          items: ["Income", "Expense"].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedTransactionType = newValue;
+                              expense.type = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
                       TextFormField(
                         controller: categoryController,
                         textAlignVertical: TextAlignVertical.center,
@@ -213,17 +250,57 @@ class _AddExpenseState extends State<AddExpense> {
                             ? const Center(child: CircularProgressIndicator())
                             : TextButton(
                                 onPressed: () {
-                                  setState(() {
-                                    expense.amount =
-                                        int.parse(expenseController.text);
-                                  });
+                                  if (expenseController.text.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content:
+                                              Text('Please enter an amount')),
+                                    );
+                                    return;
+                                  }
 
-                                  context
-                                      .read<CreateExpenseBloc>()
-                                      .add(CreateExpense(expense));
+                                  if (expense.category == Category.empty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content:
+                                              Text('Please select a category')),
+                                    );
+                                    return;
+                                  }
+
+                                  try {
+                                    // Parse the amount
+                                    double amountValue =
+                                        double.parse(expenseController.text);
+
+                                    //to apply sign based on transaction type
+                                    if (selectedTransactionType == "Expense") {
+                                      // Make expenses negative
+                                      amountValue = -amountValue.abs();
+                                    } else {
+                                      // Make income positive
+                                      amountValue = amountValue.abs();
+                                    }
+
+                                    setState(() {
+                                      expense.amount = amountValue as int;
+                                      expense.type = selectedTransactionType!;
+                                    });
+
+                                    context
+                                        .read<CreateExpenseBloc>()
+                                        .add(CreateExpense(expense));
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Please enter a valid amount')),
+                                    );
+                                  }
                                 },
                                 style: TextButton.styleFrom(
-                                    backgroundColor: Colors.black,
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 104, 56, 56),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12))),

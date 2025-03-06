@@ -11,6 +11,25 @@ class MainScreen extends StatelessWidget {
   final List<Expense> expenses;
   const MainScreen(this.expenses, {super.key});
 
+  // Calculate total income ( + amounts are income)
+  double get totalIncome {
+    return expenses
+        .where((expense) => expense.amount > 0)
+        .fold(0, (sum, expense) => sum + expense.amount);
+  }
+
+  // Calculate total expenses(-amounts are expenses)
+  double get totalExpenses {
+    return expenses
+        .where((expense) => expense.amount < 0)
+        .fold(0, (sum, expense) => sum + expense.amount.abs());
+  }
+
+  // Calculate total balance
+  double get totalBalance {
+    return totalIncome - totalExpenses;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -101,9 +120,9 @@ class MainScreen extends StatelessWidget {
                         fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    '\$ 4800.00',
-                    style: TextStyle(
+                  Text(
+                    '\$ ${totalBalance.toStringAsFixed(2)}',
+                    style: const TextStyle(
                         fontSize: 40,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
@@ -130,10 +149,10 @@ class MainScreen extends StatelessWidget {
                               )),
                             ),
                             const SizedBox(width: 8),
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Income',
                                   style: TextStyle(
                                       fontSize: 14,
@@ -141,8 +160,8 @@ class MainScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  '\$ 2500.00',
-                                  style: TextStyle(
+                                  '\$ ${totalIncome.toStringAsFixed(2)}',
+                                  style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600),
@@ -167,10 +186,10 @@ class MainScreen extends StatelessWidget {
                               )),
                             ),
                             const SizedBox(width: 8),
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Expenses',
                                   style: TextStyle(
                                       fontSize: 14,
@@ -178,8 +197,8 @@ class MainScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  '\$ 800.00',
-                                  style: TextStyle(
+                                  '\$ ${totalExpenses.toStringAsFixed(2)}',
+                                  style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600),
@@ -195,6 +214,7 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
+
             // Transactions Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
