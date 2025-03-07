@@ -69,14 +69,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.book_fill,
-                      color: index == 3 ? selectedItem : unselectedItem),
+                      color: index == 4 ? selectedItem : unselectedItem),
                   label: 'Learn',
                 ),
               ],
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation
-              .endFloat, //or centerDocked once chatbot is implemented
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton(
             // mini: true, // for sizing of plus button
             onPressed: () async {
@@ -135,10 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               MainScreen(state.expenses), // Home
               //section imports all the other screen views
-              const StatScreen(), // Stats
-              const BudgetScreen(), // Budgets
+              const StatScreen(),
+              const BudgetScreen(),
               const SavingsScreen(),
-              const LearningScreen(), // Savings
+              const LearningScreen(),
             ],
           ),
         );
