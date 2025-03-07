@@ -27,17 +27,3 @@ void main() async {
     ),
   );
 }
-
-//FOR INTEGRATING CHATGPT: 
-     // OTHER FILES+FOLDERS; chat_screen.dart, services folder
-//class MyApp extends StatelessWidget {
-  //@override
-  //Widget build(BuildContext context) {
-    //return MaterialApp(
-      //debugShowCheckedModeBanner: false,
-      //title: 'Financial Suite',
-      //theme: ThemeData(primarySwatch: Colors.blue),
-      //home: ChatScreen(), // Set ChatScreen as the home screen
-    //);
- // }
-//}

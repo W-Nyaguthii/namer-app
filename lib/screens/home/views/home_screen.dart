@@ -9,6 +9,7 @@ import 'package:namer_app/screens/home/views/main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:namer_app/screens/learn/learn.dart';
 import 'package:namer_app/screens/savings/savings.dart';
 import '../../add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import '../../stats/stats.dart';
@@ -65,6 +66,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icon(CupertinoIcons.money_dollar_circle,
                       color: index == 3 ? selectedItem : unselectedItem),
                   label: 'Savings',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.book_fill,
+                      color: index == 3 ? selectedItem : unselectedItem),
+                  label: 'Learn',
                 ),
               ],
             ),
@@ -131,7 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
               //section imports all the other screen views
               const StatScreen(), // Stats
               const BudgetScreen(), // Budgets
-              const SavingsScreen(), // Savings
+              const SavingsScreen(),
+              const LearningScreen(), // Savings
             ],
           ),
         );
