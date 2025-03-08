@@ -31,15 +31,18 @@ class SavingsScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30),
-            Container(
-              width: double.infinity,
-              height: 220,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade400),
-              ),
-              child: Center(
-                child: Icon(Icons.add, size: 40, color: Colors.grey.shade600),
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                width: double.infinity,
+                height: 220,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade400),
+                ),
+                child: Center(
+                  child: Icon(Icons.add, size: 40, color: Colors.grey.shade600),
+                ),
               ),
             ),
           ],

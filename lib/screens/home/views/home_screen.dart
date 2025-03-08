@@ -3,7 +3,7 @@ import 'package:expense_repository/expense_repository.dart';
 import 'package:namer_app/screens/add_expense/blocs/create_categorybloc/create_category_bloc.dart';
 import 'package:namer_app/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:namer_app/screens/add_expense/views/add_expense.dart';
-import 'package:namer_app/screens/budgets/budgets.dart';
+import 'package:namer_app/screens/budgets/views/budgets.dart';
 import 'package:namer_app/screens/home/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import 'package:namer_app/screens/home/views/main_screen.dart';
 import 'package:flutter/cupertino.dart';
