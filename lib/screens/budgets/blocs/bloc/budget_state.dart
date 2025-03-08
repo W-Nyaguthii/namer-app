@@ -30,3 +30,5 @@ class BudgetLoadedState extends BudgetState {
   @override
   List<Object> get props => [budgets];
 }
+
+final class BudgetDeletedState extends BudgetState {}

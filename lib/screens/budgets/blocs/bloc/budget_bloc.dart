@@ -26,7 +26,8 @@ class Budget {
 class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   BudgetBloc() : super(BudgetInitial()) {
     on<CreateBudgetEvent>(_onCreateBudget);
-    on<LoadBudgetsEvent>(_onLoadBudgets); // Listen for loading budgets
+    on<LoadBudgetsEvent>(_onLoadBudgets);
+    on<DeleteBudgetEvent>(_onDeleteBudget);
   }
 
   Future<void> _onCreateBudget(
@@ -69,16 +70,69 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         return Budget(
           id: doc.id,
           name: doc['name'],
-          amount: (doc['amount'] as num).toDouble(), // Ensure double type
+          amount: (doc['amount'] as num).toDouble(),
           category: doc['category'],
           spent: (doc['spent'] as num).toDouble(),
         );
       }).toList();
 
-      emit(BudgetLoadedState(budgets: budgets)); // Emit loaded budgets
+      emit(BudgetLoadedState(budgets: budgets));
     } catch (e) {
       emit(
           BudgetErrorState(message: 'Failed to load budgets: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onDeleteBudget(
+      DeleteBudgetEvent event, Emitter<BudgetState> emit) async {
+    try {
+      emit(BudgetLoadingState());
+
+      // to directly delete using the ID
+      try {
+        await FirebaseFirestore.instance
+            .collection('budgets')
+            .doc(event.budgetId)
+            .delete();
+      } catch (e) {
+        //find by querying the id field
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('budgets')
+            .where('id', isEqualTo: event.budgetId)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          await snapshot.docs.first.reference.delete();
+        } else {
+          throw Exception('Budget not found');
+        }
+      }
+
+      emit(BudgetDeletedState());
+
+      // Reload budgets after deletion
+      add(LoadBudgetsEvent());
+    } catch (e) {
+      emit(BudgetErrorState(
+          message: 'Failed to delete budget: ${e.toString()}'));
+    }
+  }
+
+  Future<List<String>> fetchCategories() async {
+    try {
+      // Fetch categories from Firebase
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('categories').get();
+
+      // Extract category names
+      List<String> categories = snapshot.docs.map((doc) {
+        return doc['name'] as String;
+      }).toList();
+
+      return categories;
+    } catch (e) {
+      // default list if loading fails
+      return ['Food', 'Transport', 'Entertainment', 'Savings'];
     }
   }
 }

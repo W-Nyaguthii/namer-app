@@ -23,3 +23,13 @@ class CreateBudgetEvent extends BudgetEvent {
 }
 
 class LoadBudgetsEvent extends BudgetEvent {}
+
+//To delete
+class DeleteBudgetEvent extends BudgetEvent {
+  final String budgetId;
+
+  const DeleteBudgetEvent({required this.budgetId});
+
+  @override
+  List<Object> get props => [budgetId];
+}
