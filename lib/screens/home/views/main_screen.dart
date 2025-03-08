@@ -6,21 +6,115 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:namer_app/screens/add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
+import 'package:namer_app/services/user_preferences.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   final List<Expense> expenses;
   const MainScreen(this.expenses, {super.key});
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  String userName = 'User';
+  final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadUserName() async {
+    // try {
+    final name = await UserPreferences.getUserName();
+    // if (mounted) {
+    setState(() {
+      userName = name;
+    });
+    // print("Loaded name: $name"); // Debug print
+    //}
+    // } catch (e) {
+    // print("Error loading name: $e");
+    // }
+  }
+
+  Future<void> _saveUserName(String name) async {
+    //  try {
+    //  print("Before saving - current name: $userName");
+    //  final success =
+    await UserPreferences.setUserName(name);
+    //   print("Save attempt result: $success for name: $name");
+
+    // if (success && mounted) {
+    setState(() {
+      userName = name;
+    });
+    //   print("After setState - current name: $userName");
+    // Force a reload from preferences to verify it saved
+    // _loadUserName();
+    // }
+    // } catch (e) {
+    // print("Error saving name: $e");
+    //}
+  }
+
+  void _showNameEditDialog() {
+    _nameController.text = userName;
+    //   print("Opening dialog with current name: $userName");
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Your Name'),
+        content: TextField(
+          controller: _nameController,
+          decoration: const InputDecoration(
+            labelText: 'Your Name',
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final newName = _nameController.text.trim();
+              //    print("Saving new name: $newName");
+
+              if (newName.isNotEmpty) {
+                Navigator.pop(context);
+                await _saveUserName(newName);
+              } else {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Calculate total income ( + amounts are income)
   double get totalIncome {
-    return expenses
+    return widget.expenses
         .where((expense) => expense.amount > 0)
         .fold(0, (sum, expense) => sum + expense.amount);
   }
 
   // Calculate total expenses(-amounts are expenses)
   double get totalExpenses {
-    return expenses
+    return widget.expenses
         .where((expense) => expense.amount < 0)
         .fold(0, (sum, expense) => sum + expense.amount.abs());
   }
@@ -32,6 +126,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //  print("Building with name: $userName");
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
@@ -40,51 +136,68 @@ class MainScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.yellow[700]),
-                        ),
-                        Icon(
-                          CupertinoIcons.person_fill,
-                          color: Colors.yellow[800],
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Hello",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.outline),
-                        ),
-                        Text(
-                          "Susan Jane",
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface),
-                        )
-                      ],
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: _showNameEditDialog,
+                  child: Row(
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 30,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.yellow[700]),
+                          ),
+                          Icon(
+                            CupertinoIcons.person_fill,
+                            color: Colors.yellow[800],
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Hello",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.outline),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                userName,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(
+                                Icons.edit,
+                                size: 14,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(CupertinoIcons.settings_solid))
+
+                //The Setting button
+                // IconButton(
+                //   onPressed: _showNameEditDialog,
+                // icon: const Icon(CupertinoIcons.settings_solid))
               ],
             ),
             const SizedBox(
@@ -258,7 +371,7 @@ class MainScreen extends StatelessWidget {
                 },
                 builder: (context, state) {
                   return ListView.builder(
-                    itemCount: expenses.length,
+                    itemCount: widget.expenses.length,
                     itemBuilder: (context, int i) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
@@ -280,12 +393,12 @@ class MainScreen extends StatelessWidget {
                                           width: 50,
                                           height: 50,
                                           decoration: BoxDecoration(
-                                              color: Color(
-                                                  expenses[i].category.color),
+                                              color: Color(widget
+                                                  .expenses[i].category.color),
                                               shape: BoxShape.circle),
                                         ),
                                         Image.asset(
-                                          'assets/${expenses[i].category.icon}.png',
+                                          'assets/${widget.expenses[i].category.icon}.png',
                                           scale: 2,
                                           color: Colors.white,
                                         )
@@ -293,7 +406,7 @@ class MainScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 12),
                                     Text(
-                                      expenses[i].category.name,
+                                      widget.expenses[i].category.name,
                                       style: TextStyle(
                                           fontSize: 14,
                                           color: Theme.of(context)
@@ -310,7 +423,7 @@ class MainScreen extends StatelessWidget {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "\$${expenses[i].amount}.00",
+                                          "\$${widget.expenses[i].amount}.00",
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: Theme.of(context)
@@ -320,7 +433,7 @@ class MainScreen extends StatelessWidget {
                                         ),
                                         Text(
                                           DateFormat('dd/MM/yyyy')
-                                              .format(expenses[i].date),
+                                              .format(widget.expenses[i].date),
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: Theme.of(context)
@@ -335,7 +448,7 @@ class MainScreen extends StatelessWidget {
                                       onPressed: () {
                                         context.read<CreateExpenseBloc>().add(
                                             DeleteExpense(
-                                                expenses[i].expenseId));
+                                                widget.expenses[i].expenseId));
                                       },
                                     ),
                                   ],

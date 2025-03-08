@@ -39,6 +39,7 @@ dependencies:
   intl: ^0.20.2
   flutter_colorpicker: ^1.0.3
  
+  shared_preferences: ^2.5.2  
   equatable: ^2.0.5
   bloc: ^8.1.2
   firebase_core: ^3.11.0   #could also be ^2.16.0

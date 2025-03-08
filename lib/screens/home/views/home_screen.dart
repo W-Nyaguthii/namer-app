@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:namer_app/screens/learn/learn.dart';
 import 'package:namer_app/screens/savings/views/savings.dart';
+import 'package:namer_app/screens/stats/views/stats.dart';
 import '../../add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
-import '../../stats/stats.dart';
+//import '../../stats/stats.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

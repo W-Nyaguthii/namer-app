@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/screens/stats/chart.dart';
+import 'package:namer_app/screens/stats/views/chart.dart';
 
 class StatScreen extends StatelessWidget {
   const StatScreen({super.key});
@@ -24,7 +24,7 @@ class StatScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12)),
                 child: const Padding(
-                  padding: EdgeInsets.fromLTRB(12, 20, 12, 12),
+                  padding: EdgeInsets.all(16),
                   child: MyChart(),
                 ))
           ],
