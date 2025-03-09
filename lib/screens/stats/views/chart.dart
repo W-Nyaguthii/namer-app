@@ -1,8 +1,28 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+// Transaction model
+class Transaction {
+  final String category;
+  final double amount;
+  final bool isExpense;
+  final String date;
+
+  Transaction({
+    required this.category,
+    required this.amount,
+    required this.isExpense,
+    required this.date,
+  });
+}
+
 class MyChart extends StatefulWidget {
-  const MyChart({super.key});
+  final List<Transaction> transactions;
+
+  const MyChart({
+    super.key,
+    required this.transactions,
+  });
 
   @override
   State<MyChart> createState() => _MyChartState();
@@ -38,17 +58,48 @@ class _MyChartState extends State<MyChart> {
   }
 
   List<PieChartSectionData> showingSections() {
-    // Sample data similar to your bar chart values
-    final data = [
-      {'title': '01', 'value': 2.0, 'color': Colors.blue},
-      {'title': '02', 'value': 3.0, 'color': Colors.purple},
-      {'title': '03', 'value': 2.0, 'color': Colors.orange},
-      {'title': '04', 'value': 4.5, 'color': Colors.red},
-      {'title': '05', 'value': 3.8, 'color': Colors.teal},
-      {'title': '06', 'value': 1.5, 'color': Colors.green},
-      {'title': '07', 'value': 4.0, 'color': Colors.amber},
-      {'title': '08', 'value': 3.8, 'color': Colors.pink},
-    ];
+    // Filter to only include expenses and group by category
+    final expensesByCategory = <String, double>{};
+
+    for (var transaction in widget.transactions) {
+      if (transaction.isExpense) {
+        if (expensesByCategory.containsKey(transaction.category)) {
+          expensesByCategory[transaction.category] =
+              expensesByCategory[transaction.category]! + transaction.amount;
+        } else {
+          expensesByCategory[transaction.category] = transaction.amount;
+        }
+      }
+    }
+
+    // Colors for different categories
+    final colorMap = {
+      'food': Colors.red,
+      'rent': Colors.blue,
+      'transport': Colors.green,
+      'entertainment': Colors.purple,
+      'groceries': Colors.orange,
+      'utilities': Colors.teal,
+      'shopping': Colors.amber,
+      'health': Colors.pink,
+    };
+
+    // Convert to list format needed for pie chart
+    final data =
+        expensesByCategory.entries.toList().asMap().entries.map((entry) {
+      final index = entry.key;
+      final category = entry.value.key;
+      final amount = entry.value.value;
+      final title = '0${index + 1}'; // Creates ID numbers
+
+      return {
+        'title': title,
+        'category': category,
+        'value': amount,
+        'color': colorMap[category] ??
+            Colors.grey, // Default to grey if no color defined
+      };
+    }).toList();
 
     return List.generate(data.length, (i) {
       final isTouched = i == touchedIndex;
@@ -70,6 +121,7 @@ class _MyChartState extends State<MyChart> {
           data[i]['title'] as String,
           size: widgetSize,
           borderColor: data[i]['color'] as Color,
+          category: data[i]['category'] as String,
         ),
         badgePositionPercentageOffset: .98,
       );
@@ -82,9 +134,11 @@ class _Badge extends StatelessWidget {
     this.text, {
     required this.size,
     required this.borderColor,
+    required this.category,
   });
 
   final String text;
+  final String category;
   final double size;
   final Color borderColor;
 
