@@ -28,6 +28,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<CreateBudgetEvent>(_onCreateBudget);
     on<LoadBudgetsEvent>(_onLoadBudgets);
     on<DeleteBudgetEvent>(_onDeleteBudget);
+    on<UpdateBudgetSpentEvent>(_onUpdateBudgetSpent);
   }
 
   Future<void> _onCreateBudget(
@@ -115,6 +116,41 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     } catch (e) {
       emit(BudgetErrorState(
           message: 'Failed to delete budget: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onUpdateBudgetSpent(
+      UpdateBudgetSpentEvent event, Emitter<BudgetState> emit) async {
+    try {
+      emit(BudgetLoadingState());
+
+      // First try direct update if the ID is a document ID
+      try {
+        await FirebaseFirestore.instance
+            .collection('budgets')
+            .doc(event.budgetId)
+            .update({'spent': event.newSpent});
+      } catch (e) {
+        // If that fails, find by querying the id field
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('budgets')
+            .where('id', isEqualTo: event.budgetId)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          await snapshot.docs.first.reference.update({'spent': event.newSpent});
+        } else {
+          throw Exception('Budget not found');
+        }
+      }
+
+      emit(BudgetUpdatedState());
+
+      // Reload budgets after update
+      add(LoadBudgetsEvent());
+    } catch (e) {
+      emit(BudgetErrorState(
+          message: 'Failed to update expense: ${e.toString()}'));
     }
   }
 

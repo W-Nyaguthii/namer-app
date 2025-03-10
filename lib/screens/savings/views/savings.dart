@@ -167,8 +167,7 @@ class SavingsScreenState extends State<SavingsScreen> {
                   } else if (state is SavingsLoadedState) {
                     return state.savingsList.isEmpty
                         ? Center(
-                            child: Text(
-                                "No savings goals found \nPress + to create one"))
+                            child: Text("No goals found, \nPlease create one"))
                         : ListView.builder(
                             itemCount: state.savingsList.length,
                             itemBuilder: (context, index) {

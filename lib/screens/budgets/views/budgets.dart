@@ -17,6 +17,56 @@ class BudgetScreenState extends State<BudgetScreen> {
     context.read<BudgetBloc>().add(LoadBudgetsEvent());
   }
 
+  void _showSpendDialog(BuildContext context, Budget budget) {
+    final TextEditingController amountController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Record Expense for ${budget.name}'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Current spent: \$${budget.spent.toStringAsFixed(2)}'),
+            Text('Budget: \$${budget.amount.toStringAsFixed(2)}'),
+            SizedBox(height: 20),
+            TextFormField(
+              controller: amountController,
+              decoration: InputDecoration(
+                labelText: 'Expense Amount',
+                prefixText: '\$',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (amountController.text.isNotEmpty) {
+                final newSpent =
+                    budget.spent + double.parse(amountController.text);
+                context.read<BudgetBloc>().add(
+                      UpdateBudgetSpentEvent(
+                        budgetId: budget.id,
+                        newSpent: newSpent,
+                      ),
+                    );
+                Navigator.pop(context);
+              }
+            },
+            child: Text('Record'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<BudgetBloc, BudgetState>(
@@ -28,6 +78,10 @@ class BudgetScreenState extends State<BudgetScreen> {
         } else if (state is BudgetErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
+          );
+        } else if (state is BudgetUpdatedState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Expense recorded successfully')),
           );
         }
       },
@@ -87,21 +141,19 @@ class BudgetScreenState extends State<BudgetScreen> {
                     } else if (state is BudgetLoadedState) {
                       return state.budgets.isEmpty
                           ? Center(
-                              child: Text(
-                                  "No budgets found \nPress + to create one"))
+                              child:
+                                  Text("No budgets found, \nPlease create one"))
                           : ListView.builder(
                               itemCount: state.budgets.length,
                               itemBuilder: (context, index) {
                                 final budget = state.budgets[index];
 
-                                // Simulate budget usage data
-                                //to be replaced with actual data
+                                // Calculate percentage used from actual data
                                 final double percentUsed =
-                                    [0.65, 0.32, 0.78][index % 3];
-                                final double amountSpent =
-                                    budget.amount * percentUsed;
+                                    (budget.spent / budget.amount)
+                                        .clamp(0.0, 1.0);
                                 final double amountRemaining =
-                                    budget.amount - amountSpent;
+                                    budget.amount - budget.spent;
 
                                 return Container(
                                   decoration: BoxDecoration(
@@ -116,67 +168,102 @@ class BudgetScreenState extends State<BudgetScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          ListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            title: Text(
-                                              budget.name,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: const Color.fromARGB(
-                                                    255, 43, 113, 170),
-                                              ),
-                                            ),
-                                            subtitle: Text(
-                                              "Amount: \$${budget.amount.toStringAsFixed(2)} \nCategory: ${budget.category}",
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                            // Add the delete button here
-                                            trailing: IconButton(
-                                              icon: Icon(Icons.delete,
-                                                  color: Colors.red),
-                                              onPressed: () {
-                                                // Show confirmation dialog
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
-                                                    title:
-                                                        Text('Delete Budget'),
-                                                    content: Text(
-                                                        'Are you sure you want to delete ${budget.name}?'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.pop(
-                                                                context),
-                                                        child: Text('Cancel'),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          // Delete budget
-                                                          context
-                                                              .read<
-                                                                  BudgetBloc>()
-                                                              .add(
-                                                                DeleteBudgetEvent(
-                                                                    budgetId:
-                                                                        budget
-                                                                            .id),
-                                                              );
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('Delete',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .red)),
-                                                      ),
-                                                    ],
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                child: ListTile(
+                                                  contentPadding:
+                                                      EdgeInsets.zero,
+                                                  title: Text(
+                                                    budget.name,
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              43,
+                                                              113,
+                                                              170),
+                                                    ),
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                  subtitle: Text(
+                                                    "Amount: \$${budget.amount.toStringAsFixed(2)} \nCategory: ${budget.category}",
+                                                    style:
+                                                        TextStyle(fontSize: 14),
+                                                  ),
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  // Add expense button
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_circle,
+                                                      color: Colors.red,
+                                                      size: 32,
+                                                    ),
+                                                    onPressed: () {
+                                                      _showSpendDialog(
+                                                          context, budget);
+                                                    },
+                                                  ),
+                                                  // Delete button
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.delete_outline,
+                                                      color: Colors.black,
+                                                      size: 28,
+                                                    ),
+                                                    onPressed: () {
+                                                      // Show confirmation dialog
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            AlertDialog(
+                                                          title: Text(
+                                                              'Delete Budget'),
+                                                          content: Text(
+                                                              'Are you sure you want to delete ${budget.name}?'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context),
+                                                              child: Text(
+                                                                  'Cancel'),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                // Delete budget
+                                                                context
+                                                                    .read<
+                                                                        BudgetBloc>()
+                                                                    .add(
+                                                                      DeleteBudgetEvent(
+                                                                          budgetId:
+                                                                              budget.id),
+                                                                    );
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                  'Delete',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .red)),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
 
                                           // Progress bar
@@ -189,8 +276,11 @@ class BudgetScreenState extends State<BudgetScreen> {
                                               backgroundColor:
                                                   Colors.grey.shade200,
                                               valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      const Color.fromARGB(
+                                                  AlwaysStoppedAnimation<
+                                                      Color>(percentUsed >
+                                                          0.9
+                                                      ? Colors.red
+                                                      : const Color.fromARGB(
                                                           255, 43, 113, 170)),
                                               minHeight: 8,
                                             ),
@@ -203,7 +293,7 @@ class BudgetScreenState extends State<BudgetScreen> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                "Spent: \$${amountSpent.toStringAsFixed(2)}",
+                                                "Spent: \$${budget.spent.toStringAsFixed(2)}",
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   color: Colors.grey.shade700,
@@ -235,7 +325,6 @@ class BudgetScreenState extends State<BudgetScreen> {
                   },
                 ),
               ),
-              //
             ],
           ),
         ),

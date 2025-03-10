@@ -32,3 +32,5 @@ class BudgetLoadedState extends BudgetState {
 }
 
 final class BudgetDeletedState extends BudgetState {}
+
+final class BudgetUpdatedState extends BudgetState {}

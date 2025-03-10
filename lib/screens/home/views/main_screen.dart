@@ -444,7 +444,9 @@ class _MainScreenState extends State<MainScreen> {
                                       ],
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.delete),
+                                      icon: Icon(
+                                        Icons.delete,
+                                      ),
                                       onPressed: () {
                                         context.read<CreateExpenseBloc>().add(
                                             DeleteExpense(
