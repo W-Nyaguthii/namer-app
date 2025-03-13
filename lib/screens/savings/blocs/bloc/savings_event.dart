@@ -11,17 +11,20 @@ class CreateSavingsEvent extends SavingsEvent {
   final String name;
   final double targetAmount;
   final String category;
+  final String accountType; // New field
   final DateTime targetDate;
 
   const CreateSavingsEvent({
     required this.name,
     required this.targetAmount,
     required this.category,
+    required this.accountType, // New field
     required this.targetDate,
   });
 
   @override
-  List<Object> get props => [name, targetAmount, category, targetDate];
+  List<Object> get props =>
+      [name, targetAmount, category, accountType, targetDate];
 }
 
 class LoadSavingsEvent extends SavingsEvent {}

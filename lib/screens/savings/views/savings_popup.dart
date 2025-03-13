@@ -15,6 +15,7 @@ class SavingsPopupState extends State<SavingsPopup> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _targetAmountController = TextEditingController();
   String _selectedCategory = 'Emergency Fund'; // Default category
+  String _selectedAccountType = 'Bank Savings Account'; // Default account type
   DateTime _targetDate =
       DateTime.now().add(Duration(days: 365)); // Default 1 year target
 
@@ -97,6 +98,34 @@ class SavingsPopupState extends State<SavingsPopup> {
                   ),
                 ),
                 SizedBox(height: 20),
+                // New dropdown for account type
+                DropdownButtonFormField<String>(
+                  value: _selectedAccountType,
+                  items: [
+                    'Bank Savings Account',
+                    'Money Market Fund(MMF)',
+                    '52-Week Challenge(Saf)',
+                    'Fixed Deposit',
+                    'Other'
+                  ]
+                      .map((type) => DropdownMenuItem(
+                            value: type,
+                            child: Text(type),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedAccountType = value!;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Savings Account Type',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
                 GestureDetector(
                   onTap: () async {
                     final DateTime? picked = await showDatePicker(
@@ -144,6 +173,8 @@ class SavingsPopupState extends State<SavingsPopup> {
                       name: _nameController.text,
                       targetAmount: double.parse(_targetAmountController.text),
                       category: _selectedCategory,
+                      accountType:
+                          _selectedAccountType, // Add this new parameter
                       targetDate: _targetDate,
                     ));
               }

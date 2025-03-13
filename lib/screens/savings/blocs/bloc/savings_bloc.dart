@@ -12,6 +12,7 @@ class Savings {
   final String name;
   final double targetAmount;
   final String category;
+  final String accountType; // New field
   final double currentAmount;
   final DateTime targetDate;
 
@@ -20,6 +21,7 @@ class Savings {
     required this.name,
     required this.targetAmount,
     required this.category,
+    required this.accountType, // New field
     this.currentAmount = 0.0,
     required this.targetDate,
   });
@@ -44,6 +46,7 @@ class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
         "name": event.name,
         "targetAmount": event.targetAmount,
         "category": event.category,
+        "accountType": event.accountType, // Add this field
         "currentAmount": 0.0,
         "targetDate": event.targetDate.millisecondsSinceEpoch,
       };
@@ -71,11 +74,21 @@ class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
           await FirebaseFirestore.instance.collection('savings').get();
 
       List<Savings> savingsList = snapshot.docs.map((doc) {
+        // Get the data as a map
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        String accountType = 'Bank Savings Account'; // Default value
+        // Check if accountType exists and is not null
+        if (data.containsKey('accountType') && data['accountType'] != null) {
+          accountType = data['accountType'] as String;
+        }
+
         return Savings(
           id: doc.id,
           name: doc['name'],
           targetAmount: (doc['targetAmount'] as num).toDouble(),
           category: doc['category'],
+          accountType: accountType, // Add this field with fallback
           currentAmount: (doc['currentAmount'] as num).toDouble(),
           targetDate: DateTime.fromMillisecondsSinceEpoch(doc['targetDate']),
         );
