@@ -7,12 +7,14 @@ class Transaction {
   final double amount;
   final bool isExpense;
   final String date;
+  final IconData? icon;
 
   Transaction({
     required this.category,
     required this.amount,
     required this.isExpense,
     required this.date,
+    this.icon,
   });
 }
 
@@ -58,35 +60,38 @@ class _MyChartState extends State<MyChart> {
   }
 
   List<PieChartSectionData> showingSections() {
-    // Filter to only include expenses and group by category
-    final expensesByCategory = <String, double>{};
+    // Group transactions by category
+    final transactionsByCategory = <String, double>{};
 
+    // Process all transactions, both income and expenses
     for (var transaction in widget.transactions) {
-      if (transaction.isExpense) {
-        if (expensesByCategory.containsKey(transaction.category)) {
-          expensesByCategory[transaction.category] =
-              expensesByCategory[transaction.category]! + transaction.amount;
-        } else {
-          expensesByCategory[transaction.category] = transaction.amount;
-        }
+      final category = transaction.category;
+      final amount =
+          transaction.amount.abs(); // Use absolute value for chart size
+
+      if (transactionsByCategory.containsKey(category)) {
+        transactionsByCategory[category] =
+            transactionsByCategory[category]! + amount;
+      } else {
+        transactionsByCategory[category] = amount;
       }
     }
 
-    // Colors for different categories
     final colorMap = {
-      'food': Colors.red,
-      'rent': Colors.blue,
-      'transport': Colors.green,
-      'entertainment': Colors.purple,
-      'groceries': Colors.orange,
-      'utilities': Colors.teal,
-      'shopping': Colors.amber,
-      'health': Colors.pink,
+      'House': const Color(0xFF5cbdb9),
+      'Food': Colors.red,
+      'Transport': Colors.green,
+      'Entertainment': Colors.purple,
+      'Shopping': Colors.amber,
+      'Health': Colors.pink,
+      'Utilities': Colors.teal,
+      'Job': Colors.blue,
+      // Add more categories as needed
     };
 
     // Convert to list format needed for pie chart
     final data =
-        expensesByCategory.entries.toList().asMap().entries.map((entry) {
+        transactionsByCategory.entries.toList().asMap().entries.map((entry) {
       final index = entry.key;
       final category = entry.value.key;
       final amount = entry.value.value;
@@ -110,7 +115,7 @@ class _MyChartState extends State<MyChart> {
       return PieChartSectionData(
         color: data[i]['color'] as Color,
         value: data[i]['value'] as double,
-        title: '${data[i]['title']}',
+        title: data[i]['title'] as String,
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,

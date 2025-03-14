@@ -23,7 +23,7 @@ void main() async {
           create: (context) => CreateExpenseBloc(FirebaseExpenseRepo()),
         ),
         BlocProvider(
-          create: (context) => BudgetBloc(), // Add BudgetBloc
+          create: (context) => BudgetBloc(),
         ),
         BlocProvider(
           create: (context) => SavingsBloc(),
