@@ -230,6 +230,7 @@ class _LearningScreenState extends State<LearningScreen> {
 
   Future<String> _getGeminiResponse(String prompt) async {
     final url = Uri.parse(
+//change model to gemini-2.0-flash
         'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=$apiKey');
 
     final payload = jsonEncode({

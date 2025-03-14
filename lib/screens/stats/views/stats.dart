@@ -46,7 +46,6 @@ class _StatScreenState extends State<StatScreen> {
       ];
     } catch (e) {
       // Handle any errors
-      print('Error loading transactions: $e');
     } finally {
       setState(() {
         isLoading = false;
