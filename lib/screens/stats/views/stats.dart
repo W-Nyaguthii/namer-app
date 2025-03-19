@@ -25,24 +25,39 @@ class _StatScreenState extends State<StatScreen> {
     });
 
     try {
-      // Replace this with your actual transaction fetching logic
+      // Replace with actual transaction fetching logic
       // For now, i used sample data that matches the home screen
       transactions = [
+        //  Transaction(
+        //  category: 'House',
+        //  amount: 800.00,
+        //   isExpense: false, // Income
+        //  date: '11/03/2025',
+        //  icon: Icons.home,
+        // ),
         Transaction(
-          category: 'House',
-          amount: 800.00,
-          isExpense: false, // Income
-          date: '11/03/2025',
-          icon: Icons.home,
+          category: 'Shopping',
+          amount: 70.00,
+          isExpense: true,
+          date: '19/03/2025',
+          //   icon: Icons.home,
         ),
         Transaction(
-          category: 'House',
-          amount: 10.00,
+          category: 'Food',
+          amount: 86.00,
+          isExpense: true,
+          date: '19/03/2025',
+          // icon: Icons.home,
+        ),
+        Transaction(
+          category: 'Travel',
+          amount: 345.00,
           isExpense: true, // Expense
           date: '09/03/2025',
-          icon: Icons.home,
+          // icon: Icons.home,
         ),
-        // Add more transactions if needed
+
+        // Add more transactions
       ];
     } catch (e) {
       // Handle any errors
@@ -155,12 +170,9 @@ class _StatScreenState extends State<StatScreen> {
   Color getColorForCategory(String category) {
     final colorMap = {
       'House': const Color(0xFF5cbdb9),
-      'Food': Colors.red,
-      'Transport': Colors.green,
-      'Entertainment': Colors.purple,
-      'Shopping': Colors.amber,
-      'Health': Colors.pink,
-      'Utilities': Colors.teal,
+      'Food': const Color.fromARGB(255, 233, 125, 117),
+      'Travel': const Color.fromARGB(255, 214, 138, 228),
+      'Shopping': Colors.pink,
       'Job': Colors.blue,
     };
 

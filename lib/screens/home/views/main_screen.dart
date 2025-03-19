@@ -195,9 +195,9 @@ class _MainScreenState extends State<MainScreen> {
                 ),
 
                 //The Setting button
-                IconButton(
-                    onPressed: _showNameEditDialog,
-                    icon: const Icon(CupertinoIcons.settings_solid))
+                //  IconButton(
+                //    onPressed: _showNameEditDialog,
+                //  icon: const Icon(CupertinoIcons.settings_solid))
               ],
             ),
             const SizedBox(

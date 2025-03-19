@@ -79,12 +79,9 @@ class _MyChartState extends State<MyChart> {
 
     final colorMap = {
       'House': const Color(0xFF5cbdb9),
-      'Food': Colors.red,
-      'Transport': Colors.green,
-      'Entertainment': Colors.purple,
-      'Shopping': Colors.amber,
-      'Health': Colors.pink,
-      'Utilities': Colors.teal,
+      'Food': const Color.fromARGB(255, 233, 125, 117),
+      'Travel': const Color.fromARGB(255, 214, 138, 228),
+      'Shopping': Colors.pink,
       'Job': Colors.blue,
       // Add more categories as needed
     };
