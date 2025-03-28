@@ -37,7 +37,6 @@ class _LearningScreenState extends State<LearningScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Input field at the top
             _buildMessageInput(),
 
             // Typing indicator
@@ -53,7 +52,7 @@ class _LearningScreenState extends State<LearningScreen> {
                 ),
               ),
 
-            // Chat messages area
+            // Chat messages
             Expanded(
               child: _messages.isEmpty
                   ? const Center(

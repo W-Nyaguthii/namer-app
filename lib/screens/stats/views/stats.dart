@@ -26,7 +26,7 @@ class _StatScreenState extends State<StatScreen> {
 
     try {
       // Replace with actual transaction fetching logic
-      // For now, i used sample data that matches the home screen
+      //i used sample data that matches the home screen
       transactions = [
         //  Transaction(
         //  category: 'House',
@@ -39,21 +39,21 @@ class _StatScreenState extends State<StatScreen> {
           category: 'Shopping',
           amount: 70.00,
           isExpense: true,
-          date: '19/03/2025',
+          date: '28/03/2025',
           //   icon: Icons.home,
         ),
         Transaction(
           category: 'Food',
           amount: 86.00,
           isExpense: true,
-          date: '19/03/2025',
+          date: '28/03/2025',
           // icon: Icons.home,
         ),
         Transaction(
           category: 'Travel',
           amount: 345.00,
           isExpense: true, // Expense
-          date: '09/03/2025',
+          date: '28/03/2025',
           // icon: Icons.home,
         ),
 
