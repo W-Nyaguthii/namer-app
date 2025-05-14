@@ -57,18 +57,10 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       userName = name;
     });
-    //   print("After setState - current name: $userName");
-    // Force a reload from preferences to verify it saved
-    // _loadUserName();
-    // }
-    // } catch (e) {
-    // print("Error saving name: $e");
-    //}
   }
 
   void _showNameEditDialog() {
     _nameController.text = userName;
-    //   print("Opening dialog with current name: $userName");
 
     showDialog(
       context: context,
@@ -89,8 +81,6 @@ class _MainScreenState extends State<MainScreen> {
           TextButton(
             onPressed: () async {
               final newName = _nameController.text.trim();
-              //    print("Saving new name: $newName");
-
               if (newName.isNotEmpty) {
                 Navigator.pop(context);
                 await _saveUserName(newName);
@@ -126,8 +116,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //  print("Building with name: $userName");
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
@@ -193,11 +181,6 @@ class _MainScreenState extends State<MainScreen> {
                     ],
                   ),
                 ),
-
-                //The Setting button
-                //  IconButton(
-                //    onPressed: _showNameEditDialog,
-                //  icon: const Icon(CupertinoIcons.settings_solid))
               ],
             ),
             const SizedBox(
